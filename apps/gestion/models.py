@@ -37,7 +37,7 @@ class Reportes(models.Model):
     nombre = models.CharField(max_length=100)
     ip = models.GenericIPAddressField(protocol='IPv4')
     enlace = models.IntegerField(null=True, blank=True)
-    servicio = models.IntegerField(null=True, blank=True)
+    servicio = models.CharField(max_length=100, null=True, blank=True)
     que_cayo = models.CharField(max_length=100)
     fecha = models.DateTimeField(auto_now_add=True)
     fecha_levanta = models.DateTimeField(null=True, blank=True)
