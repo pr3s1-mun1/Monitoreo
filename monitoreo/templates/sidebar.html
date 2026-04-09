@@ -49,17 +49,60 @@
             aria-expanded="false"
             >
             <i class="fas fa-file-alt me-3 text-primary"></i>
-            <span class="flex-grow-1">Reportes</span>
+            <span class="flex-grow-1">Reportes Enlaces</span>
             <i class="fas fa-chevron-down ms-auto text-primary small transition"
                :class="{ 'rotate-180': reportOpen }"></i>
             </button>
 
             <div x-show="reportOpen" x-cloak class="ps-4 mt-1">
-                <a href="{% url 'crear_reporte' %}" class="d-flex align-items-center px-2 py-1 small text-dark text-decoration-none rounded hover-primary">
-                    <i class="fas fa-plus me-2 text-primary opacity-75"></i> Crear Reporte
-                </a>
                 <a href="{% url 'reportes' %}" class="d-flex align-items-center px-2 py-1 small text-dark text-decoration-none rounded mb-1 hover-primary">
                     <i class="fas fa-list me-2 text-primary opacity-75"></i> Listado Reportes
+                </a>
+            </div>
+        </div>
+
+        <div x-data="{ reportOpen: false }" class="mb-2">
+            <button
+            @click="reportOpen = !reportOpen"
+            class="d-flex align-items-center w-100 px-3 py-2 rounded border-0 bg-transparent text-dark hover-primary text-start"
+            type="button"
+            aria-expanded="false"
+            >
+            <i class="fas fa-file-alt me-3 text-primary"></i>
+            <span class="flex-grow-1">Reportes Telefónicos</span>
+            <i class="fas fa-chevron-down ms-auto text-primary small transition"
+               :class="{ 'rotate-180': reportOpen }"></i>
+            </button>
+
+            <div x-show="reportOpen" x-cloak class="ps-4 mt-1">
+                <a href="{% url 'crear_telefonia' %}" class="d-flex align-items-center px-2 py-1 small text-dark text-decoration-none rounded hover-primary">
+                    <i class="fas fa-plus me-2 text-primary opacity-75"></i> Crear Reporte
+                </a>
+                <a href="{% url 'gestionar_telefonia' %}" class="d-flex align-items-center px-2 py-1 small text-dark text-decoration-none rounded mb-1 hover-primary">
+                    <i class="fas fa-list me-2 text-primary opacity-75"></i> Listado Reportes
+                </a>
+            </div>
+        </div>
+
+        <div x-data="{ reportOpen: false }" class="mb-2">
+            <button
+            @click="reportOpen = !reportOpen"
+            class="d-flex align-items-center w-100 px-3 py-2 rounded border-0 bg-transparent text-dark hover-primary text-start"
+            type="button"
+            aria-expanded="false"
+            >
+            <i class="fas fa-file-alt me-3 text-primary"></i>
+            <span class="flex-grow-1">Gestión IP</span>
+            <i class="fas fa-chevron-down ms-auto text-primary small transition"
+               :class="{ 'rotate-180': reportOpen }"></i>
+            </button>
+
+            <div x-show="reportOpen" x-cloak class="ps-4 mt-1">
+                <a href="{% url 'list_vlans' %}" class="d-flex align-items-center px-2 py-1 small text-dark text-decoration-none rounded hover-primary">
+                    <i class="fas fa-list me-2 text-primary opacity-75"></i> Listado VLANs
+                </a>
+                <a href="{% url 'list_ips' %}" class="d-flex align-items-center px-2 py-1 small text-dark text-decoration-none rounded mb-1 hover-primary">
+                    <i class="fas fa-list me-2 text-primary opacity-75"></i> Listado IPs
                 </a>
             </div>
         </div>

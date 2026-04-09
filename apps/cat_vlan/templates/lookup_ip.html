@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Buscar IP{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+
+    <h1 class="text-2xl font-bold mb-4">Buscar IP</h1>
+
+    <!-- Buscador -->
+    <form method="get" class="bg-white p-4 mb-4 rounded shadow">
+        <div class="row g-3 align-items-end">
+
+            <div class="col-md-4">
+                <input
+                    type="text"
+                    name="ip"
+                    value="{{ request.GET.ip }}"
+                    placeholder="Ej. 192.168.1.10"
+                    class="form-control"
+                >
+            </div>
+
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">
+                    Buscar
+                </button>
+                <a href="{% url 'list_ips' %}" class="btn btn-secondary">
+                    Limpiar
+                </a>
+            </div>
+
+            <div class="col-md-4 text-end">
+                <a href="{% url 'create_ip' %}" class="btn btn-primary">
+                    + Nueva IP
+                </a>
+            </div>
+
+        </div>
+    </form>
+
+    <!-- Resultados -->
+    {% if ips %}
+        {% for ip_obj in ips %}
+        <div class="bg-white p-4 mb-3 rounded shadow">
+            <table class="table table-bordered mb-0">
+                <tr>
+                    <th>IP</th>
+                    <td>{{ ip_obj.ip }}</td>
+                </tr>
+                <tr>
+                    <th>Asignado a</th>
+                    <td>{{ ip_obj.asignado|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>Departamento</th>
+                    <td>{{ ip_obj.departamento|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>Tipo de Internet</th>
+                    <td>{{ ip_obj.tipo|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>Tipo de IP</th>
+                    <td>{{ ip_obj.tipo_ip|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>VLAN</th>
+                    <td>
+                        {% if ip_obj.vlan %}
+                            {{ ip_obj.vlan.numero }} - {{ ip_obj.vlan.nombre }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Comentarios</th>
+                    <td>{{ ip_obj.comentarios|default:"-" }}</td>
+                </tr>
+            </table>
+        </div>
+        {% endfor %}
+
+    {% elif request.GET.ip %}
+        <div class="alert alert-warning">
+            No se encontró información para la IP ingresada.
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -24,8 +24,14 @@ urlpatterns = [
     path('reportes/', views.lista_reportes, name='reportes'),
     path('reportes/nuevo/', views.crear_reporte, name='crear_reporte'),
 
+    # Reportes Telefonía
+    path('reportes_telefonia/nuevo', views.crear_reporte_telefonia, name='crear_telefonia'),
+    path('reportes_telefonia/editar/<int:id>', views.editar_telefonia, name='editar_telefonia'),
+    path('reportes_telefonia/', views.lista_reportes_telefonia, name='gestionar_telefonia'),
+
     # API Endpoints
     path('api/servidor/<str:ip>/', views.obtener_servidor, name='obtener_servidor'),
     path('api/guardar_reporte/', views.guardar_reporte, name='guardar_reporte'),
     path('api/cerrar_reporte/<int:pk>/', views.cerrar_reporte, name='cerrar_reporte'),
+    path('api/cerrar_telefonia/<int:pk>/', views.cerrar_telefonia, name='cerrar_telefonia'),
 ]

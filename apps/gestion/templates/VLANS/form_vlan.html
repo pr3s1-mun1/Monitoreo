@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+
+    <h1 class="text-2xl font-bold mb-6">{{ titulo }}</h1>
+
+    <form method="post" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {% csrf_token %}
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Número de VLAN</label>
+            {{ form.numero }}
+            {% if form.numero.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.numero.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Nombre</label>
+            {{ form.nombre }}
+            {% if form.nombre.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.nombre.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Descripción</label>
+            {{ form.descripcion }}
+            {% if form.descripcion.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.descripcion.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <div class="flex items-center justify-between">
+            <button type="submit" class="btn btn-primary">
+                Guardar
+            </button>
+            <a href="{% url 'list_vlans' %}" class="text-sm text-gray-600 hover:underline">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -50,3 +50,18 @@ class Reportes(models.Model):
 
     def __str__(self):
         return f"Reporte de {self.servidor.nombre} a las {self.fecha_hora}: {self.estado}"
+    
+
+class ReportesTelefonia(models.Model):
+    sitio = models.CharField(max_length=100)
+    referencia = models.CharField(max_length=50)
+    contacto_sitio = models.CharField(max_length=50)
+    numero_contacto = models.IntegerField()
+    numero_reporte = models.IntegerField()
+    fecha = models.DateTimeField(auto_now_add=True)
+    fecha_levanta = models.DateTimeField(null=True, blank=True)
+    descripcion_problema = models.CharField(max_length=100)
+    quien_levanta = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='usuario_levanta')
+    observaciones = models.TextField(null=True, blank=True)
+    estatus = models.IntegerField(choices=ESTATUS_CHOICES, default=1)
+    observaciones_finales = models.TextField(null=True, blank=True)

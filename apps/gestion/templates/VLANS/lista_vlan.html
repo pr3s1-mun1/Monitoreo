@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}VLANs{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+
+    <h1 class="text-2xl font-bold mb-4">VLANs</h1>
+
+    <form method="get" class="bg-white p-4 mb-4 rounded shadow">
+        <div class="row g-3 align-items-end">
+
+            <div class="col-md-4">
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ request.GET.q }}"
+                    placeholder="Buscar por ID, nombre o descripción"
+                    class="form-control"
+                >
+            </div>
+
+            <div class="col-md-4">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        Buscar
+                    </button>
+
+                    <a href="{% url 'list_vlans' %}" class="btn btn-secondary">
+                        Limpiar
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4 text-end">
+                <a href="{% url 'create_vlan' %}" class="btn btn-primary">
+                    + Nueva VLAN
+                </a>
+            </div>
+
+        </div>
+    </form>
+
+    <div class="table-container">
+
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vlan in vlans %}
+                <tr class="hover:bg-gray-100">
+                    <td>{{ vlan.numero }}</td>
+                    <td>{{ vlan.nombre }}</td>
+                    <td>{{ vlan.descripcion }}</td>
+                    <td class="space-x-2">
+                        <a href="{% url 'update_vlan' vlan.pk %}" class="text-yellow-600 hover:underline">
+                            <i class="btn btn-sm btn-outline-secondary bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url 'delete_vlan' vlan.pk %}" class="text-red-600 hover:underline">
+                            <i class="btn btn-sm btn-outline-danger bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="py-4 text-center text-gray-500">
+                            No hay VLANs registradas.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

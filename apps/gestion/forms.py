@@ -1,7 +1,26 @@
 # gestion/forms.py
 
 from django import forms
-from .models import Iconos, Servidor, Categoria, Reportes
+from .models import Iconos, Servidor, Categoria, Reportes, ReportesTelefonia
+
+class BootstrapFormMixin:
+    """
+    Aplica clases de Bootstrap a todos los campos del form
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for nombre, field in self.fields.items():
+            widget = field.widget
+
+            if widget.__class__.__name__ in ['CheckboxInput']:
+                widget.attrs['class'] = 'form-check-input'
+            else:
+                widget.attrs['class'] = 'form-control'
+
+            # Placeholder opcional
+            if hasattr(field, 'label'):
+                widget.attrs['placeholder'] = field.label
 
 class IconoForm(forms.ModelForm):
     class Meta:
@@ -57,4 +76,26 @@ class ReporteForm(forms.ModelForm):
         }
         labels = {
             'enlace': 'Número de Sitio',
+        }
+
+class ReportesTelefoniaForm(BootstrapFormMixin, forms.ModelForm):
+
+    class Meta:
+        model = ReportesTelefonia
+        fields = [
+            'sitio',
+            'referencia',
+            'contacto_sitio',
+            'numero_contacto',
+            'numero_reporte',
+            'descripcion_problema',
+            'observaciones',
+        ]
+
+        widgets = {
+            'fecha_levanta': forms.DateTimeInput(attrs={
+                'type': 'datetime-local'
+            }),
+            'observaciones': forms.Textarea(attrs={'rows': 3}),
+            'observaciones_finales': forms.Textarea(attrs={'rows': 3}),
         }

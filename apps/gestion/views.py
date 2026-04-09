@@ -1,8 +1,8 @@
 # views.py
 
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Iconos, Servidor, Categoria, Reportes
-from .forms import IconoForm, ServidorForm, CategoriaForm, ReporteForm
+from .models import Iconos, Servidor, Categoria, Reportes, ReportesTelefonia
+from .forms import IconoForm, ServidorForm, CategoriaForm, ReporteForm, ReportesTelefoniaForm
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Q
@@ -152,6 +152,44 @@ def lista_reportes(request):
         'reportes': reportes
     })
 
+# ------- Reportes Telefonía ------- #
+def crear_reporte_telefonia(request):
+    if request.method == 'POST':
+        form = ReportesTelefoniaForm(request.POST)
+        if form.is_valid():
+            reporte = form.save(commit=False) 
+            reporte.quien_levanta = request.user  
+            reporte.save()
+            return redirect('gestionar_telefonia')
+    else:
+        form = ReportesTelefoniaForm()
+
+    return render(request, 'reportes_telefonia/crear.html', {'form': form})
+
+def editar_telefonia(request, id):
+    reporte = get_object_or_404(ReportesTelefonia, id=id)
+
+    if request.method == 'POST':
+        form = ReportesTelefoniaForm(request.POST, instance=reporte)
+        if form.is_valid():
+            form.save()
+            return redirect('gestionar_telefonia')
+    else:
+        form = ReportesTelefoniaForm(instance=reporte)
+
+    return render(request, 'reportes_telefonia/crear.html', {
+        'form': form,
+        'modo': 'editar',
+        'reporte': reporte
+    })
+
+def lista_reportes_telefonia(request):
+    reportes = ReportesTelefonia.objects.all().select_related('quien_levanta')
+    reportes = reportes.order_by('-fecha')
+    return render(request, 'reportes_telefonia/gestionar.html', {
+        'reportes': reportes
+    })
+
 # === Endpoints === #
 def obtener_servidor(request, ip):
     servidor = get_object_or_404(Servidor, ip=ip)
@@ -201,3 +239,13 @@ def cerrar_reporte(request, pk):
         reporte.fecha_levanta = timezone.now()
         reporte.save()
         return redirect('reportes')
+    
+def cerrar_telefonia(request, pk):
+    observaciones_finales = request.POST.get('observaciones_finales', '')
+    if request.method == 'POST':
+        reporte = get_object_or_404(ReportesTelefonia, pk=pk)
+        reporte.observaciones_finales = observaciones_finales
+        reporte.estatus = 2 
+        reporte.fecha_levanta = timezone.now()
+        reporte.save()
+        return redirect('gestionar_telefonia')

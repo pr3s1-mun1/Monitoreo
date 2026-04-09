@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Reportes Telefonía{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h1 class="h2 mb-4">Reportes Telefonía</h1>
+
+    <!-- FILTROS -->
+    <form method="get" class="bg-white p-4 mb-4 rounded shadow">
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ request.GET.q }}"
+                    placeholder="Sitio, referencia o contacto"
+                    class="form-control"
+                >
+            </div>
+
+            <div class="col-md-3">
+                <input
+                    type="date"
+                    name="fecha_inicio"
+                    value="{{ request.GET.fecha_inicio }}"
+                    class="form-control"
+                >
+            </div>
+
+            <div class="col-md-3">
+                <input
+                    type="date"
+                    name="fecha_fin"
+                    value="{{ request.GET.fecha_fin }}"
+                    class="form-control"
+                >
+            </div>
+
+            <div class="col-md-2">
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary">
+                        Filtrar
+                    </button>
+
+                    <a href="{% url 'gestionar_telefonia' %}" class="btn btn-secondary">
+                        Limpiar
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <!-- TABLA -->
+    <div class="table-container">
+        <table class="custom-table">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Referencia</th>
+                    <th>Sitio</th>
+                    <th>Contacto Sitio</th>
+                    <th>Descripción Problema</th>
+                    <th>Fecha</th>
+                    <th>Quién levantó</th>
+                    <th>Fecha Levanta</th>
+                    <th>Observaciones</th>
+                    <th>Observaciones finales</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for r in reportes %}
+                <tr>
+                    <td>{{ r.id }}</td>
+                    <td>{{ r.referencia }}</td>
+                    <td>{{ r.sitio }}</td>
+                    <td>{{ r.contacto_sitio }}</td>
+                    <td>{{ r.descripcion_problema }}</td>
+                    <td>{{ r.fecha }}</td>
+                    <td>
+                        {% if r.quien_levanta %}
+                            {{ r.quien_levanta.get_full_name }}
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if r.fecha_levanta %}
+                            {{ r.fecha_levanta }}
+                        {% else %}
+                            <span class="badge bg-warning text-dark">
+                                Pendiente
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>{{ r.observaciones|default:"" }}</td>
+                    <td>{{ r.observaciones_finales|default:"" }}</td>
+                    <td class="d-flex gap-2">
+                        <!-- CERRAR -->
+                        {% if r.estatus == 1 %}
+                            <button
+                                class="btn btn-success btn-sm"
+                                onclick="abrirModalCerrar({{ r.id }})">
+                                Cerrar
+                            </button>
+                        {% else %}
+                            <span class="text-muted">Cerrado</span>
+                        {% endif %}
+
+                        <a href="{% url 'editar_telefonia' r.id %}" class="btn btn-secondary btn-sm"> Editar </a>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="11" class="text-center py-4 text-muted">
+                        No hay reportes.
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="modal-cerrar" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cerrar Reporte</h5>
+                <button type="button" class="btn-close" onclick="cerrarModalCerrar()" aria-label="Close"></button>
+            </div>
+            
+            <form id="form-cerrar" method="post">
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Observaciones finales</label>
+                        <textarea
+                            name="observaciones_finales"
+                            class="form-control"
+                            rows="4"
+                            required></textarea>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="cerrarModalCerrar()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Confirmar cierre
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function abrirModalCerrar(idReporte) {
+    const form = document.getElementById('form-cerrar');
+    form.action = `/gestion/api/cerrar_telefonia/${idReporte}/`;
+    
+    // Usando Bootstrap modal
+    const modalElement = document.getElementById('modal-cerrar');
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
+}
+
+function cerrarModalCerrar() {
+    const modalElement = document.getElementById('modal-cerrar');
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    modal.hide();
+}
+</script>
+{% endblock %}
