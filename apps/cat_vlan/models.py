@@ -22,10 +22,12 @@ class IPS(models.Model):
     def __str__(self):
         return f"{self.ip} - VLAN: {self.vlan}"
     
+
 class VLAN(models.Model):
-    numero = models.PositiveIntegerField(unique=True)
-    nombre = models.CharField(max_length=100, blank=True, null=True)
+    numero = models.IntegerField()
+    nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
 
+    red = models.CharField(max_length=50, null=True, blank=True)
     def __str__(self):
-        return f"VLAN {self.numero} - {self.nombre}"
+        return f"{self.numero} - {self.nombre}"

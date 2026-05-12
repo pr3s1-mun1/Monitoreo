@@ -8,5 +8,4 @@ urlpatterns = [
     path('vlan/<int:pk>/eliminar/', views.VlanDeleteView.as_view(), name='delete_vlan'),
 
     path('ips/', views.IPSListView.as_view(), name='list_ips'),
-    path('ips/crear/', views.IPSCreateView.as_view(), name='create_ip'),
 ]

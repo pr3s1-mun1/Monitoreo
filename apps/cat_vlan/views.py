@@ -17,6 +17,13 @@ class VlanCreateView(CreateView):
     template_name = 'VLANS/form_vlan.html'
     success_url = reverse_lazy('list_vlans')
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        generar_ips_vlan(self.object)
+
+        return response
+
 class VlanUpdateView(UpdateView):
     model = VLAN
     form_class = VLANForm
@@ -41,8 +48,17 @@ class IPSListView(ListView):
         
         return IPS.objects.none() 
 
-class IPSCreateView(CreateView):
-    model = IPS
-    form_class = IPSForm
-    template_name = 'form_ip.html'
-    success_url = reverse_lazy('list_ips')
+
+import ipaddress
+
+def generar_ips_vlan(vlan):
+    red = ipaddress.ip_network(vlan.red, strict=False)
+
+    for ip in red.hosts():
+        ip_str = str(ip)
+
+        if not IPS.objects.filter(ip=ip_str).exists():
+            IPS.objects.create(
+                ip=ip_str,
+                vlan=vlan
+            )
