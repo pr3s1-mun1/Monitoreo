@@ -1,0 +1,22 @@
+# Entorno virtual y carpetas de sistema
+venv/
+.venv/
+env/
+__pycache__/
+
+# Base de datos local
+*.sqlite3
+*.sqlite3-journal
+
+# Variables de entorno (¡MUY IMPORTANTE!)
+.env
+
+# Archivos de configuración de VS Code
+.vscode/
+
+# Logs y archivos temporales
+*.log
+*.tmp
+
+# Archivos de medios (si subes imágenes o archivos a tu servidor)
+media/
