@@ -1,4 +1,4 @@
-# Entorno virtual y carpetas de sistema
+# Entorno virtual y carpetas de sistema.
 venv/
 .venv/
 env/
